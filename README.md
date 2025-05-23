@@ -129,4 +129,3 @@ This project enhanced skills in:
 * Testing and interface usability
 * Applying Waterfall methodology from planning to deployment
 
-> 🔗 *This project is part of an academic submission for ICT702 and reflects real-world software development principles and practices.*
