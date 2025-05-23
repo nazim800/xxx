@@ -167,6 +167,133 @@ class Transaction:
         print(f"Amount Paid: ${self.amount:.2f}")
         print(f"Date: {self.date}")
         print("----------------------------")
+
+# ---------------- Fitness Management System ---------------- #
+class FitnessManagementSystem:
+    def __init__(self):
+        self.members = []
+        self.trainers = []
+        self.classes = []
+        self.transactions = []
+
+    def register_member(self, member):
+        self.members.append(member)
+        print(f"New member registered: {member.name}")
+
+    def show_all_members(self):
+        print("\nMember List:")
+        for m in self.members:
+            print(f"{m.member_id}: {m.name} | {m.membership_type} | Goals: {m.goals}")
+
+    def add_trainer(self, trainer):
+        self.trainers.append(trainer)
+
+    def schedule_class(self, fitness_class):
+        self.classes.append(fitness_class)
+        fitness_class.trainer.assign_class(fitness_class)
+
+    def record_payment(self, member_id, amount, service):
+        member = next((m for m in self.members if m.member_id == member_id), None)
+        if member:
+            transaction = Transaction(len(self.transactions) + 1, member, amount, service)
+            self.transactions.append(transaction)
+            transaction.show_receipt()
+        else:
+            print("Member not found.")
+
+    def show_revenue_report(self):
+        total_revenue = sum(t.amount for t in self.transactions)
+        print("\nRevenue Report")
+        print(f"Total Revenue: ${total_revenue:.2f}")
+        print(f"Total Members: {len(self.members)}")
+        if self.classes:
+            most_popular = max(self.classes, key=lambda c: len(c.enrolled_members))
+            print(f"Most Popular Class: {most_popular.name} ({len(most_popular.enrolled_members)} enrolled)")
+
+    def update_member_progress(self, member_id, update):
+        member = next((m for m in self.members if m.member_id == member_id), None)
+        if member:
+            member.add_progress(update)
+        else:
+            print("Member not found.")
+
+    def cancel_membership(self, member_id):
+        self.members = [m for m in self.members if m.member_id != member_id]
+        print(f"Membership canceled for ID: {member_id}")
+
+
+# ---------------- Menu Interface ---------------- #
+def main():
+    system = FitnessManagementSystem()
+
+    while True:
+        print("\nSmart Fitness Management System")
+        print("1. Register Member")
+        print("2. View Members")
+        print("3. Book Fitness Class")
+        print("4. Process Payment")
+        print("5. Revenue Report")
+        print("6. Update Progress")
+        print("7. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            member_id = input("ID: ")
+            name = input("Name: ")
+            age = int(input("Age: "))
+            membership = input("Membership Type (Basic/Premium/VIP): ")
+            goals = input("Fitness Goals: ")
+            new_member = Member(member_id, name, age, membership, goals)
+            system.register_member(new_member)
+
+        elif choice == '2':
+            system.show_all_members()
+
+        elif choice == '3':
+            member_id = input("Member ID: ")
+            class_id = input("Class ID: ")
+            class_name = input("Class Name: ")
+            trainer_name = input("Trainer Name: ")
+            trainer_specialty = input("Trainer Specialty: ")
+            capacity = int(input("Capacity: "))
+            schedule = input("Schedule (e.g. 2025-05-10 10:00AM): ")
+
+            trainer = Trainer("T" + class_id, trainer_name, trainer_specialty)
+            fitness_class = FitnessClass(class_id, class_name, trainer, capacity, schedule)
+
+            system.add_trainer(trainer)
+            system.schedule_class(fitness_class)
+
+            member = next((m for m in system.members if m.member_id == member_id), None)
+            if member:
+                member.book_fitness_class(fitness_class)
+            else:
+                print("Member not found.")
+
+        elif choice == '4':
+            member_id = input("Member ID: ")
+            amount = float(input("Amount Paid: "))
+            service = input("Service (e.g., Monthly Fee): ")
+            system.record_payment(member_id, amount, service)
+
+        elif choice == '5':
+            system.show_revenue_report()
+
+        elif choice == '6':
+            member_id = input("Member ID: ")
+            update = input("Progress Update (e.g., 'Ran 5km, Lost 1kg'): ")
+            system.update_member_progress(member_id, update)
+
+        elif choice == '7':
+            print("Thank you for using Smart Fitness Management System. Stay healthy!")
+            break
+
+        else:
+            print("Invalid option. Please choose from the menu.")
+
+if __name__ == "__main__":
+    main()
 ```
 ---
 
