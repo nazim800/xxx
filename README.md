@@ -83,6 +83,92 @@ The **Waterfall Model** was chosen for its structured and sequential design—id
 * Modular code structure supports enhancements such as authentication, data persistence, and GUI
 
 ---
+## 🗒️ Source Code
+
+```python
+import datetime
+
+# ---------------- Member Class ---------------- #
+class Member:
+    def __init__(self, member_id, name, age, membership_type, goals):
+        self.member_id = member_id
+        self.name = name
+        self.age = age
+        self.membership_type = membership_type
+        self.goals = goals
+        self.booked_classes = []
+        self.progress_updates = []
+
+    def change_membership(self, new_type):
+        self.membership_type = new_type
+
+    def book_fitness_class(self, fitness_class):
+        if fitness_class.add_member(self):
+            self.booked_classes.append(fitness_class)
+            print(f"{self.name} has booked the {fitness_class.name} class.")
+        else:
+            print("Booking failed. Class is full.")
+
+    def add_progress(self, update):
+        self.progress_updates.append(update)
+        print("Progress recorded successfully.")
+
+# ---------------- Trainer Class ---------------- #
+class Trainer:
+    def __init__(self, trainer_id, name, specialty):
+        self.trainer_id = trainer_id
+        self.name = name
+        self.specialty = specialty
+        self.classes_assigned = []
+
+    def assign_class(self, fitness_class):
+        self.classes_assigned.append(fitness_class)
+
+    def show_schedule(self):
+        print(f"\nSchedule for Trainer {self.name}:")
+        for c in self.classes_assigned:
+            print(f" - {c.name} on {c.schedule}")
+
+# ---------------- Fitness Class ---------------- #
+class FitnessClass:
+    def __init__(self, class_id, name, trainer, capacity, schedule):
+        self.class_id = class_id
+        self.name = name
+        self.trainer = trainer
+        self.capacity = capacity
+        self.schedule = schedule
+        self.enrolled_members = []
+
+    def add_member(self, member):
+        if len(self.enrolled_members) < self.capacity:
+            self.enrolled_members.append(member)
+            return True
+        return False
+
+    def remove_member(self, member):
+        if member in self.enrolled_members:
+            self.enrolled_members.remove(member)
+
+# ---------------- Transaction Class ---------------- #
+class Transaction:
+    def __init__(self, transaction_id, member, amount, service):
+        self.transaction_id = transaction_id
+        self.member = member
+        self.amount = amount
+        self.date = datetime.date.today()
+        self.service = service
+
+    def show_receipt(self):
+        print("\nReceipt")
+        print(f"Transaction ID: {self.transaction_id}")
+        print(f"Member: {self.member.name}")
+        print(f"Membership Type: {self.member.membership_type}")
+        print(f"Service: {self.service}")
+        print(f"Amount Paid: ${self.amount:.2f}")
+        print(f"Date: {self.date}")
+        print("----------------------------")
+```
+---
 
 ## ✅ Features Implemented
 
@@ -118,7 +204,7 @@ The **Waterfall Model** was chosen for its structured and sequential design—id
 
 ---
 
-## 🧾 Conclusion
+## 👽 Conclusion
 
 The **Smart Fitness Management System** is a functional, OOP-based Python application that simulates the operations of a digital gym platform. Despite being a solo project, it addresses all core requirements from the case study while maintaining a scalable design for future growth.
 
